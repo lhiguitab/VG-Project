@@ -30,9 +30,24 @@ def select_campaign(driver):
     grupo_3_link.click()
 
     time.sleep(1)  # Wait for the page to load
-    grupo_4_link = driver.find_element(By.XPATH, "//*[@id='mainForm:dtCampanas:0:j_idt204']/span[1]")
-    grupo_4_link.click()
+    grupo_3_link = driver.find_element(By.XPATH, "//*[@id='mainForm:dtCampanas:0:j_idt204']/span[1]")
+    grupo_3_link.click()
 
+    time.sleep(1)  # Wait for the page to load
+
+    # Click on the "Gestionar" link
+    menu_button = driver.find_element(By.XPATH, "//*[@id='menu-button']")
+    menu_already_open = driver.find_elements(By.CLASS_NAME, "menu-button-rotate")
+
+    if menu_already_open:
+        time.sleep(1)
+        manage_link = driver.find_element(By.XPATH, "//*[@id='mainForm:mnGestionar']/a")
+        manage_link.click()
+    else:
+        menu_button.click()
+        time.sleep(1)
+        manage_link = driver.find_element(By.XPATH, "//*[@id='mainForm:mnGestionar']/a")
+        manage_link.click()
 
 if __name__ == "__main__":
     # Load environment variables from .env file
