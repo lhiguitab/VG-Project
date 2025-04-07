@@ -37,14 +37,16 @@ def select_campaign(driver):
 
     # Click on the "Gestionar" link
     menu_button = driver.find_element(By.XPATH, "//*[@id='menu-button']")
-    menu_already_open = driver.find_elements(By.CLASS_NAME, "menu-button-rotate")
+    menu_closed = driver.find_elements(By.CLASS_NAME, "menu-button-rotate")
 
-    if menu_already_open:
+    if menu_closed:
+        print("Menu not open, clicking to open")
+        menu_button.click()
         time.sleep(1)
         manage_link = driver.find_element(By.XPATH, "//*[@id='mainForm:mnGestionar']/a")
         manage_link.click()
     else:
-        menu_button.click()
+        print("Menu already open")
         time.sleep(1)
         manage_link = driver.find_element(By.XPATH, "//*[@id='mainForm:mnGestionar']/a")
         manage_link.click()
