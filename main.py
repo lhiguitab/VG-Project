@@ -39,6 +39,26 @@ def select_campaign(driver):
     manage_link = driver.find_element(By.XPATH, "//*[@id='mainForm:mnGestionar']/a")
     manage_link.click()
 
+def client_management(driver, cedula):
+    time.sleep(3)
+
+    # Click on the "Buscar" link
+    cedula_input = driver.find_element(By.XPATH, "//*[@id='topBarForm:itBuscarGenerico']")
+    cedula_input.send_keys(cedula)
+    driver.find_element(By.XPATH, "//*[@id='topBarForm:j_idt56_button']/span[1]").click()
+    time.sleep(1)
+
+    # Select client
+    driver.find_element(By.XPATH, "//*[@id='mainForm:idDtDeudoresObligaciones_data']/tr/td[3]").click()
+    time.sleep(1)
+
+    #Select phone number
+    driver.find_element(By.XPATH, "//*[@id='mainForm:pgRenderisarDatosContacto:dtTelefonosDeudorData_data']/tr[1]/td[2]").click()
+    time.sleep(2)
+
+    
+
+
 if __name__ == "__main__":
     # Load environment variables from .env file
     load_dotenv()
@@ -51,6 +71,7 @@ if __name__ == "__main__":
     # Get the username and password from environment variables
     username = os.environ.get("USERNAME_VG")
     password = os.environ.get("PASSWORD_VG")
+    cedula= os.environ.get("CEDULA_PRUEBA")
 
     options = Options()
     options.add_experimental_option("detach", True)
@@ -60,3 +81,4 @@ if __name__ == "__main__":
 
     login(driver, username, password)
     select_campaign(driver)
+    client_management(driver, cedula)
