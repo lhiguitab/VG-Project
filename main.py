@@ -22,6 +22,17 @@ def login(driver, username, password):
     captcha_input.send_keys(captcha_text.text)
     captcha_input.send_keys(Keys.RETURN)
 
+def select_campaign(driver):
+    time.sleep(3)  # Wait for the page to load
+
+    # Click on the "Grupo 3" link
+    grupo_3_link = driver.find_element(By.XPATH, "//td[contains(text(), '3 | LEONISA CASTIGO')]")
+    grupo_3_link.click()
+
+    time.sleep(1)  # Wait for the page to load
+    grupo_4_link = driver.find_element(By.XPATH, "//*[@id='mainForm:dtCampanas:0:j_idt204']/span[1]")
+    grupo_4_link.click()
+
 
 if __name__ == "__main__":
     # Load environment variables from .env file
@@ -41,9 +52,4 @@ if __name__ == "__main__":
     print(username, password)
 
     login(driver, username, password)
-
-    time.sleep(3)  # Wait for the page to load
-
-    # Click on the "Grupo 3" link
-    grupo_3_link = driver.find_element(By.XPATH, "//td[contains(text(), '3 | LEONISA CASTIGO')]")
-    grupo_3_link.click()
+    select_campaign(driver)
