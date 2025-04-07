@@ -46,17 +46,36 @@ def client_management(driver, cedula):
     cedula_input = driver.find_element(By.XPATH, "//*[@id='topBarForm:itBuscarGenerico']")
     cedula_input.send_keys(cedula)
     driver.find_element(By.XPATH, "//*[@id='topBarForm:j_idt56_button']/span[1]").click()
-    time.sleep(1)
+    time.sleep(2)
 
     # Select client
     driver.find_element(By.XPATH, "//*[@id='mainForm:idDtDeudoresObligaciones_data']/tr/td[3]").click()
-    time.sleep(1)
+    time.sleep(2)
 
-    #Select phone number
+    # Select phone number
     driver.find_element(By.XPATH, "//*[@id='mainForm:pgRenderisarDatosContacto:dtTelefonosDeudorData_data']/tr[1]/td[2]").click()
     time.sleep(2)
 
-    
+    # Select "Contacto titular" 
+    driver.find_element(By.XPATH, "//*[@id='mainForm:dtAgreeGuiones_data']/tr[11]/td/span").click()
+    time.sleep(2)
+    # Select keep contact
+    driver.find_element(By.XPATH, "//*[@id='mainForm:j_idt12760']").click()
+    time.sleep(1)
+
+    # Select "Compromiso de pago"
+    driver.find_element(By.XPATH, "//*[@id='mainForm:dtAgreeGuiones_data']/tr[7]/td/span").click()
+    time.sleep(2)
+    # Select skip 
+    driver.find_element(By.XPATH, "//*[@id='mainForm:j_idt12768']/span").click()
+    time.sleep(1)
+
+    #Select the payment agreement
+    driver.find_element(By.XPATH, "//*[@id='mainForm:pgPanelDatosDeContacto:dtObligTogg2_data']/tr/td[2]/div/div[2]/span").click()
+    time.sleep(2)
+
+    # select "Acuerdo"
+    driver.find_element(By.XPATH, "//*[@id='mainForm:pgPanelDatosDeContacto:nuevoAcuerdo']/span[2]").click()
 
 
 if __name__ == "__main__":
