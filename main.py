@@ -2,9 +2,8 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 from dotenv import load_dotenv
+import time
 import os
 
 def login(driver, username, password):
@@ -43,12 +42,8 @@ if __name__ == "__main__":
 
     login(driver, username, password)
 
-    # Wait for the page to load and the element to be clickable
-    wait = WebDriverWait(driver, 10)
+    time.sleep(3)  # Wait for the page to load
 
-    grupo_3 = wait.until(
-        EC.element_to_be_clickable((By.XPATH, "//td[contains(text(), '3 | LEONISA CASTIGO')]"))
-    )
-
-    # Click the element
-    grupo_3.click()
+    # Click on the "Grupo 3" link
+    grupo_3_link = driver.find_element(By.XPATH, "//td[contains(text(), '3 | LEONISA CASTIGO')]")
+    grupo_3_link.click()
