@@ -2,6 +2,8 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 from dotenv import load_dotenv
 import os
 
@@ -40,3 +42,13 @@ if __name__ == "__main__":
     print(username, password)
 
     login(driver, username, password)
+
+    # Wait for the page to load and the element to be clickable
+    wait = WebDriverWait(driver, 10)
+
+    grupo_3 = wait.until(
+        EC.element_to_be_clickable((By.XPATH, "//td[contains(text(), '3 | LEONISA CASTIGO')]"))
+    )
+
+    # Click the element
+    grupo_3.click()
