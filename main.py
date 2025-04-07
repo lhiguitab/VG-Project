@@ -30,8 +30,8 @@ if __name__ == "__main__":
     driver = webdriver.Chrome()
 
     # Get the username and password from environment variables
-    username = os.environ.get("USERNAME")
-    password = os.environ.get("PASSWORD")
+    username = os.environ.get("USERNAME_VG")
+    password = os.environ.get("PASSWORD_VG")
 
     options = Options()
     options.add_experimental_option("detach", True)
