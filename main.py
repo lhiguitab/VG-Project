@@ -12,6 +12,7 @@ import os
 def login(driver, username, password):
     driver.get("https://visiong.iagree.co/iAgree/faces/login.xhtml")
     driver.maximize_window()
+    time.sleep(1)  # Wait for the page to load
     assert "i Agree 2.0" in driver.title
     user = driver.find_element(By.NAME, "loginForm:j_idt22")
     user.send_keys(username)
@@ -82,8 +83,12 @@ def client_management(driver, cedula):
     driver.find_element(By.XPATH, "//span[contains(text(),'OMITIR')]").click()
     time.sleep(1)
 
-def payment_agreement(driver, agreement_value):
+def payment_agreement(driver, agreement_value,agreement_comment, agreement_date):
     time.sleep(2)
+
+    # add the agreement comment
+    agreement_comment_field = driver.find_element(By.XPATH, "//*[@id='mainForm:idObsAgreeScript']")
+    agreement_comment_field.send_keys(agreement_comment)
 
     #Select the payment agreement
     driver.find_element(By.XPATH, "//*[@id='mainForm:pgPanelDatosDeContacto:dtObligTogg2_data']/tr/td[2]/div/div[2]/span").click()
@@ -104,19 +109,27 @@ def payment_agreement(driver, agreement_value):
     agreement_value_field.send_keys(agreement_value)
     time.sleep(1)
 
+    # Selecet the date
+    agreement_date_field = driver.find_element(By.XPATH, "//*[@id='mainForm:idAccordionPanelAcuerdos:j_idt12888_input']")
+    agreement_date_field.send_keys(agreement_date)
+    time.sleep(1)
+    agreement_date_field.send_keys(Keys.ENTER)
+    driver.find_element(By.XPATH, "//*[@id='mainForm:idAccordionPanelAcuerdos:ingresarAcuerdo']/div[2]").click()
+    time.sleep(2)
+
     # Select the confirmation hour
     driver.find_element(By.XPATH, "//*[@id='mainForm:idAccordionPanelAcuerdos:j_idt12892']/div[3]/span").click()
     driver.find_element(By.XPATH, "//*[@id='mainForm:idAccordionPanelAcuerdos:j_idt12892_15']").click()
-    time.sleep(1)
+    time.sleep(2)
 
     # Select "Efecto Acuerdo"
     driver.find_element(By.XPATH, "//*[@id='mainForm:idAccordionPanelAcuerdos:j_idt12910']/div[3]/span").click()
+    time.sleep(0.2)
     driver.find_element(By.XPATH, "//*[@id='mainForm:idAccordionPanelAcuerdos:j_idt12910_1']").click()
     time.sleep(1)
 
     # Select "posibilidad de cumplimiento"
     driver.find_element(By.XPATH, "//*[@id='mainForm:idAccordionPanelAcuerdos:j_idt12923']/tbody/tr/td[2]/div/div[2]").click()
-
 
 
 if __name__ == "__main__":
@@ -133,6 +146,8 @@ if __name__ == "__main__":
     password = os.environ.get("PASSWORD_VG")
     cedula = os.environ.get("CEDULA_PRUEBA")
     agreement_value = os.environ.get("VALOR_ACUERDO")
+    agreement_comment = ("cobranza digital (gestión IA)")
+    agreement_date = ("05/08/2025")
 
     options = Options()
     options.add_experimental_option("detach", True)
@@ -142,4 +157,4 @@ if __name__ == "__main__":
     login(driver, username, password)
     select_campaign(driver)
     client_management(driver, cedula)
-    payment_agreement(driver, agreement_value)
+    payment_agreement(driver, agreement_value, agreement_comment, agreement_date)
