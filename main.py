@@ -5,9 +5,9 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from dotenv import load_dotenv
-from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import TimeoutException # Used for the try except block
 import time
-import pandas as pd
+import pandas as pd 
 import os
 
 
@@ -150,8 +150,8 @@ if __name__ == "__main__":
     # Get the username and password from environment variables
     username = os.environ.get("USERNAME_VG")
     password = os.environ.get("PASSWORD_VG")
-    cedula = ("1128196458")
-    agreement_value = ("177414")
+    cedula = os.environ.get("CEDULA_PRUEBA")
+    agreement_value = os.environ.get("VALOR_ACUERDO")
     agreement_comment = ("cobranza digital (gestión IA)")
     agreement_date = ("14/04/2025")
 
