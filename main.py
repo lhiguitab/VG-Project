@@ -5,14 +5,16 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from dotenv import load_dotenv
+from selenium.common.exceptions import TimeoutException
 import time
+import pandas as pd
 import os
 
 
 def login(driver, username, password):
     driver.get("https://visiong.iagree.co/iAgree/faces/login.xhtml")
     driver.maximize_window()
-    time.sleep(1)  # Wait for the page to load
+    time.sleep(2)  # Wait for the page to load
     assert "i Agree 2.0" in driver.title
     user = driver.find_element(By.NAME, "loginForm:j_idt22")
     user.send_keys(username)
@@ -99,10 +101,14 @@ def payment_agreement(driver, agreement_value,agreement_comment, agreement_date)
     time.sleep(2)
 
     # Select "omitir y agregar nuevo"
-    wait = WebDriverWait(driver, 15)  # Wait until 10 secs max
-    skip_add_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//*[@id='mainForm:j_idt12859']/span")))
-    skip_add_button.click()
-    time.sleep(2)
+    try:
+        wait = WebDriverWait(driver, 2)  # Wait until 2 secs max
+        skip_add_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//*[@id='mainForm:j_idt12859']/span")))
+        skip_add_button.click()
+        time.sleep(2)
+        print("Skip and add button clicked")
+    except TimeoutException:
+        print("TimeoutException: Element not found")
 
     # add the agreement value
     agreement_value_field = driver.find_element(By.XPATH, "//*[@id='mainForm:idAccordionPanelAcuerdos:j_idt12884_input']")
@@ -144,10 +150,10 @@ if __name__ == "__main__":
     # Get the username and password from environment variables
     username = os.environ.get("USERNAME_VG")
     password = os.environ.get("PASSWORD_VG")
-    cedula = os.environ.get("CEDULA_PRUEBA")
-    agreement_value = os.environ.get("VALOR_ACUERDO")
+    cedula = ("1128196458")
+    agreement_value = ("177414")
     agreement_comment = ("cobranza digital (gestión IA)")
-    agreement_date = ("05/08/2025")
+    agreement_date = ("14/04/2025")
 
     options = Options()
     options.add_experimental_option("detach", True)
