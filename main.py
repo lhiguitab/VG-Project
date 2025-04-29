@@ -1,9 +1,9 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.chrome.options import Options 
+from selenium.webdriver.support.ui import WebDriverWait # Used for the wait
+from selenium.webdriver.support import expected_conditions as EC # Used for the wait
 from dotenv import load_dotenv
 from selenium.common.exceptions import TimeoutException # Used for the try except block
 import time
@@ -102,7 +102,7 @@ def payment_agreement(driver, agreement_value,agreement_comment, agreement_date)
 
     # Select "omitir y agregar nuevo"
     try:
-        wait = WebDriverWait(driver, 2)  # Wait until 2 secs max
+        wait = WebDriverWait(driver, 3)  # Wait until 2 secs max
         skip_add_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//*[@id='mainForm:j_idt12859']/span")))
         skip_add_button.click()
         time.sleep(2)
@@ -131,7 +131,7 @@ def payment_agreement(driver, agreement_value,agreement_comment, agreement_date)
     # Select "Efecto Acuerdo"
     driver.find_element(By.XPATH, "//*[@id='mainForm:idAccordionPanelAcuerdos:j_idt12910']/div[3]/span").click()
     time.sleep(0.2)
-    driver.find_element(By.XPATH, "//*[@id='mainForm:idAccordionPanelAcuerdos:j_idt12910_1']").click()
+    driver.find_element(By.XPATH, "//*[@id='mainForm:idAccordionPanelAcuerdos:j_idt12910_2']").click()
     time.sleep(1)
 
     # Select "posibilidad de cumplimiento"
@@ -150,17 +150,37 @@ if __name__ == "__main__":
     # Get the username and password from environment variables
     username = os.environ.get("USERNAME_VG")
     password = os.environ.get("PASSWORD_VG")
-    cedula = os.environ.get("CEDULA_PRUEBA")
-    agreement_value = os.environ.get("VALOR_ACUERDO")
     agreement_comment = ("cobranza digital (gestión IA)")
-    agreement_date = ("14/04/2025")
+
 
     options = Options()
     options.add_experimental_option("detach", True)
-    driver = webdriver.Chrome(options=options)
 
+    csv_path = r"C:\Users\57318\compromiso pruebas RPA leonisa.csv"
+    df = pd.read_csv(csv_path, sep=";")
 
-    login(driver, username, password)
-    select_campaign(driver)
-    client_management(driver, cedula)
-    payment_agreement(driver, agreement_value, agreement_comment, agreement_date)
+    for index, row in df.iterrows():
+        cedula = str(row["NIT"]).strip()
+        phone_number = str(row["TELEFONO"]).strip()
+        agreement_value = str(row["VALOR"]).strip()
+        agreement_date = str(row["FECHA"]).strip()
+        efecto_acuerdo = str(row["EFECTO ACUERDO"]).strip()  
+
+        try:
+            # Set up the driver for each iteration
+            driver = webdriver.Chrome(options=options)
+            login(driver, username, password)
+            select_campaign(driver)
+            client_management(driver, cedula)
+            payment_agreement(driver, agreement_value, agreement_comment, agreement_date)
+
+            print(f"✅ Client {cedula} processed correctly.\n")
+
+            
+
+        except Exception as e:
+            print(f"❌ error processing client {cedula}: {e}")
+            try:
+                driver.quit()
+            except:
+                pass
