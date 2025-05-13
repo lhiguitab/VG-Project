@@ -5,8 +5,8 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait # Used for the wait
 from selenium.webdriver.support import expected_conditions as EC # Used for the wait
 from selenium.webdriver.common.action_chains import ActionChains
-from dotenv import load_dotenv
 from selenium.common.exceptions import TimeoutException # Used for the try except block
+from dotenv import load_dotenv
 import time
 import pandas as pd 
 import os
@@ -96,7 +96,7 @@ def client_management(driver, cedula):
         keep_button.click()
         time.sleep(4)
     except TimeoutException:
-        wait = WebDriverWait(driver, 4)  # Wait until 2 secs max
+        wait = WebDriverWait(driver, 4)  # Wait until 4 secs max
         causales_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//*[@id='mainForm:j_idt1748_data']/tr/td")))
         causales_button.click()
         manejo_codigo_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//*[@id='mainForm:j_idt1752_data']/tr[6]/td/span")))
@@ -125,7 +125,6 @@ def payment_agreement(driver, agreement_value,agreement_comment, agreement_date)
     #Select the payment agreement
     driver.find_element(By.XPATH, "//*[@id='mainForm:pgPanelDatosDeContacto:dtObligTogg2_data']/tr/td[2]/div/div[2]/span").click()
     time.sleep(4)
-
     # Select "Acuerdo"
     driver.find_element(By.XPATH, "//*[@id='mainForm:pgPanelDatosDeContacto:nuevoAcuerdo']/span[2]").click()
     time.sleep(4)
@@ -168,7 +167,7 @@ def payment_agreement(driver, agreement_value,agreement_comment, agreement_date)
     driver.find_element(By.XPATH, "//*[@id='mainForm:idAccordionPanelAcuerdos:j_idt12923']/tbody/tr/td[2]/div/div[2]").click()
     time.sleep(2)
     # # Esperar a que el usuario presione Enter
-    # input("Presiona Enter para cerrar el navegador y terminar el script...")
+    # input("Presiona Enter para cerrar el navegador y terminar el script...")  
     # driver.quit()  # Cierra el navegador solo después de que el usuario presione Enter
 
     #select "adicionar acuerdo"
@@ -204,8 +203,6 @@ if __name__ == "__main__":
     csv_path = r"C:\Users\57318\compromiso pruebas RPA leonisa.csv"
     df = pd.read_csv(csv_path, sep=";")
 
-    resultados = []
-
     for index, row in df.iterrows():
         cedula = str(row["NIT"]).strip()
         agreement_value = str(row["VALOR"]).strip()
@@ -215,19 +212,18 @@ if __name__ == "__main__":
             client_management(driver, cedula)
             payment_agreement(driver, agreement_value, agreement_comment, agreement_date)
 
-            resultados.append({"NIT": cedula,"estado": "Procesado"})
+            df.at[index,"ESTADO"] = "Procesado"
             
 
         except Exception as e:
-            resultados.append({"NIT": cedula,"estado": "Error"})
+            df.at[index, "ESTADO"] = f"Error: {str(e)}"
             # Mostrar el traceback completo en la terminal
             traceback.print_exc()
             
 
 
-    # Guardar resultados
-    resultado_df = pd.DataFrame(resultados)
-    resultado_df.to_csv("resultado_gestion.csv", index=False, encoding="utf-8-sig")
+    # Save the results on the same CSV file
+    df.to_csv(csv_path, sep=";", index=False, encoding="utf-8-sig")
 
     driver.quit()
-    print("Prceso terminado correctamente")
+    print("Proceso terminado correctamente")
